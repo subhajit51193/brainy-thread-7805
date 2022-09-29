@@ -24,6 +24,11 @@ public class StudentLoginUseCase {
 			Student student = st.loginStudent(username, password);
 			
 			System.out.println("Welcome Back "+student.getName());
+			System.out.println("Username :"+student.getUsername());
+			System.out.println("Roll :"+student.getRoll());
+			System.out.println("Mobile :"+student.getMobile());
+			System.out.println("Address :"+student.getAddress());
+			
 			
 			result = true;
 			
