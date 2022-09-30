@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.BeanClass.Admin;
+import com.BeanClass.Batch;
+import com.BeanClass.BatchDTO;
 import com.BeanClass.Course;
 import com.BeanClass.CourseDTO;
 import com.BeanClass.Student;
 import com.BeanClass.StudentDTO;
 import com.Exceptions.AdminException;
+import com.Exceptions.BatchException;
 import com.Exceptions.CourseException;
 import com.Exceptions.StudentException;
 import com.utility.DataBaseUtil;
@@ -233,6 +236,156 @@ public class AdminImplDAO implements AdminDAO{
 		}
 		return list;
 	}
+
+	@Override
+	public String registerNewBatch(Batch batch) {
+		String message = "Not inserted please check and try again!!!";
+		
+		try (Connection conn = DataBaseUtil.provideConnection()){
+			
+			PreparedStatement ps = conn.prepareStatement("insert into batch values(?,?)");
+			
+			ps.setInt(1, batch.getBatchno());
+			ps.setInt(2, batch.getSeats());
+			
+			int x = ps.executeUpdate();
+			
+			if (x > 0) {
+				message = "Batch Details Registered Successfully!!!";
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			message = e.getMessage();
+		}
+		
+		
+		return message;
+	}
+
+	@Override
+	public String registerStudentInsideBatch(int roll, int batchno) throws StudentException, BatchException {
+		
+		String message = "Not registered";
+		
+		try (Connection conn = DataBaseUtil.provideConnection()){
+			
+			PreparedStatement ps = conn.prepareStatement("select * from student where roll = ?");
+			ps.setInt(1, roll);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if (rs.next()) {
+				PreparedStatement ps2 = conn.prepareStatement("select * from batch where batchno = ?");
+				ps2.setInt(1, batchno);
+				
+				ResultSet rs2 = ps2.executeQuery();
+				
+				if (rs2.next()) {
+					PreparedStatement ps3= conn.prepareStatement("insert into student_batch values(?,?)");
+					
+					ps3.setInt(1, roll);
+					ps3.setInt(2, batchno);
+					int x = ps3.executeUpdate();
+					
+					if (x > 0) {
+						message = "Student Registered Successfully inside the  Batch";
+						PreparedStatement ps4= conn.prepareStatement("update batch set seats = seats - 1 where batchno = ?");
+						ps4.setInt(1, batchno);
+						
+						int x1 = ps4.executeUpdate();
+						if (x1 > 0) {
+							System.out.println("Seats updated.....");
+						}
+						
+					}else {
+						throw new StudentException("Technical Error");
+					}
+				}
+				else {
+					throw new BatchException("Invalid Batch...");
+				}
+			}
+			else {
+				throw new StudentException("Invalid Student...");
+			}
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			throw new StudentException(e.getMessage());
+		}
+		
+		
+		return message;
+	}
+
+	@Override
+	public String updateSeatsNumber(Batch batch) {
+		String message = "Not updated Please try again!!!";
+		
+		try (Connection conn = DataBaseUtil.provideConnection()){
+			
+		PreparedStatement ps = conn.prepareStatement("update batch set seats = ? where batchno =?");
+		
+		
+		ps.setInt(1, batch.getSeats());
+		ps.setInt(2, batch.getBatchno());
+		int x = ps.executeUpdate();
+		
+		if (x > 0) {
+			message = "Seats updated Successfully ...";
+		}
+		
+		} catch (SQLException e) {
+			// TODO: handle exception
+			message = e.getMessage();
+		}
+		
+		
+		return message;
+	}
+
+	@Override
+	public List<BatchDTO> viewStudentOfEveryBatch() throws StudentException {
+		List<BatchDTO> list = new ArrayList<>();
+		
+		
+		try (Connection conn = DataBaseUtil.provideConnection()){
+			
+			
+			PreparedStatement ps = conn.prepareStatement("select s.name,s.address,s.roll,s.mobile,b.batchno from student s,batch b,student_batch sb where s.roll = sb.roll AND b.batchno = sb.batchno;");
+			
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				String n = rs.getString("name");
+				String add = rs.getString("address");
+				int roll = rs.getInt("roll");
+				String m = rs.getString("mobile");
+				int b = rs.getInt("batchno");
+				
+				
+				BatchDTO dto = new BatchDTO(n, add, roll, m, b);
+				list.add(dto);
+			}
+			
+			
+		} catch (SQLException e) {
+//			// TODO: handle exception
+////			throw new CourseException(e.getMessage());
+			throw new StudentException(e.getMessage());
+		}
+		
+		if (list.size() == 0) {
+			throw new StudentException("No Student Found...");
+		}
+		return list;
+	}
+
+	
 
 	
 }
