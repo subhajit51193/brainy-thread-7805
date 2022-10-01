@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.BeanClass.Student;
 import com.BeanClass.StudentDTO;
+import com.BeanClass.StudentDTOO;
 import com.Exceptions.AdminException;
 import com.Exceptions.CourseException;
 import com.Exceptions.StudentException;
@@ -21,7 +22,7 @@ public interface StudentDAO {
 	
 	public List<Student> getAllStudentDetails() throws StudentException;
 	
-	public List<StudentDTO> getAllDetailsByStudentName(String username) throws StudentException;
+	public List<StudentDTOO> getAllDetailsByStudentName(String username) throws StudentException;
 	
 	public String updateStudentName(Student student);
 	

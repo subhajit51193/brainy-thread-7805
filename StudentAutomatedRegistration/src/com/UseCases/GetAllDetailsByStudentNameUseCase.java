@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.BeanClass.Student;
 import com.BeanClass.StudentDTO;
+import com.BeanClass.StudentDTOO;
 import com.Exceptions.StudentException;
 import com.OperationsDAO.StudentDAO;
 import com.OperationsDAO.StudentImplDAO;
@@ -31,9 +32,9 @@ public class GetAllDetailsByStudentNameUseCase {
 			
 			String username = student.getUsername();
 			
-			List<StudentDTO> list1 = st.getAllDetailsByStudentName(username);
+			List<StudentDTOO> list1 = st.getAllDetailsByStudentName(username);
 			
-			for (StudentDTO s : list1) {
+			for (StudentDTOO s : list1) {
 				System.out.println("Roll :"+s.getRoll());
 				System.out.println("Username :"+s.getUsername());
 				System.out.println("Name :"+s.getName());
@@ -43,6 +44,8 @@ public class GetAllDetailsByStudentNameUseCase {
 				System.out.println("Course Name :"+s.getCoursename());
 				System.out.println("Course Fees :"+s.getFees());
 				System.out.println("Course Duration :"+s.getDuration());
+				System.out.println("Batch No :"+s.getBatchno());
+				System.out.println("Seats Avaiable :"+s.getSeats());
 				System.out.println("==========================================");
 				
 			}

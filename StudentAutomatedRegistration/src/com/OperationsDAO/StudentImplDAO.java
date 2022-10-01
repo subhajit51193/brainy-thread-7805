@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.BeanClass.Student;
 import com.BeanClass.StudentDTO;
+import com.BeanClass.StudentDTOO;
 import com.Exceptions.AdminException;
 import com.Exceptions.CourseException;
 import com.Exceptions.StudentException;
@@ -210,20 +211,21 @@ public class StudentImplDAO implements StudentDAO{
 	}
 
 	@Override
-	public List<StudentDTO> getAllDetailsByStudentName(String username) throws StudentException {
+	public List<StudentDTOO> getAllDetailsByStudentName(String username) throws StudentException {
 		
-		List<StudentDTO> list = new ArrayList<>();
+		List<StudentDTOO> list = new ArrayList<>();
 		
 		
 		try (Connection conn = DataBaseUtil.provideConnection()){
 			
-			PreparedStatement ps = conn.prepareStatement("select s.roll,s.username,s.name,s.address,s.mobile,c.courseid,c.coursename,c.fees,c.duration from student s,course c,student_course sc where s.roll = sc.roll AND c.courseid = sc.courseid AND username = ?");
-			
+
+			PreparedStatement ps = conn.prepareStatement("select s.roll,s.username,s.name,s.address,s.mobile,c.courseid,c.coursename,c.fees,c.duration,b.batchno,b.seats from student s,course c,batch b,student_course sc,student_batch sb where s.roll = sc.roll AND c.courseid = sc.courseid AND s.roll = sb.roll AND b.batchno = sb.batchno AND s.username = ?;");
 			ps.setString(1, username);
 			
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
+
 				int r = rs.getInt("roll");
 				String un = rs.getString("username");
 				String n = rs.getString("name");
@@ -233,8 +235,11 @@ public class StudentImplDAO implements StudentDAO{
 				String cn = rs.getString("coursename");
 				int f = rs.getInt("fees");
 				String dur = rs.getString("duration");
+				int batch = rs.getInt("batchno");
+				int seats = rs.getInt("seats");
 				
-				StudentDTO dto = new StudentDTO(r, un, n, add, mob, cid, cn, f, dur);
+
+				StudentDTOO dto = new StudentDTOO(r, un, n, add, mob, cid, cn, f, dur, batch, seats);
 				list.add(dto);
 			}
 			
