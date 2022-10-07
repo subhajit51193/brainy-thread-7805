@@ -1,5 +1,5 @@
 
-# Automated Student Registration System
+# Automated Student Registration System[Console Based Application]
 
 It is my first Project of backend. Used Java as Programming language and used SQL as database to store all the data.
 Admin password and username has been hardcode . Admin username = "username" and password = "password".
