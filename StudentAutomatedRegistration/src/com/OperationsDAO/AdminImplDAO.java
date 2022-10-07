@@ -232,7 +232,7 @@ public class AdminImplDAO implements AdminDAO{
 		}
 		
 		if (list.size() == 0) {
-			throw new CourseException("No course found...");
+			throw new CourseException("No details found...");
 		}
 		return list;
 	}

@@ -79,6 +79,7 @@ public class CallingClass {
 						case 6:
 							getAllDetailsByCourseNameUseCase g = new getAllDetailsByCourseNameUseCase();
 							g.getAllDetailsByCourseName();
+							break;
 						case 7:
 							RegisterBatchUseCase rb = new RegisterBatchUseCase();
 							rb.registerNewBatch();
